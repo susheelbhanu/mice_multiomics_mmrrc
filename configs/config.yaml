@@ -1,0 +1,17 @@
+# Define sample names
+# samples: ["GL_56_Down", "GL_56_Up", "GL_58_Down", "GL_58_Up", "GL_5_Down", "GL_5_Up", "GL_6_Down", "GL_6_UpB", "GL_6_Up"]
+
+# Directory where fastq files are
+work_dir: "/work/projects/nomis/aaron_metaG/IMP3"
+
+# Directory to save the output to
+results_dir: "/scratch/users/sbusi/libprep/IMP3"
+
+# Number of cpus or threads to use
+gtdbtk:
+  path: "/home/users/sbusi/apps/db/gtdbtk/release89"
+  threads: 12
+
+checkm:
+  threads: 24
+  plot_threads: 12

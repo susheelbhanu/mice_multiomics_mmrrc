@@ -1,0 +1,92 @@
+##############################
+# MODULES
+import os
+# TODO
+# Purpose: to re-run GTDBtk and CheckM on the bins
+##############################
+# CONFIG
+# config file
+configfile: "config.yaml"
+
+# default executable for snakmake
+shell.executable("bash")
+
+# Paths
+SRC_DIR = srcdir("../scripts")
+ENV_DIR = srcdir("envs")
+MOD_DIR = srcdir("../submodules")
+
+# working directory
+workdir:
+    config["work_dir"]
+
+# Parameters
+RESULTS_DIR=config["results_dir"]
+
+
+##############################
+# RULES & TARGETS
+
+# localrules: merge_guppy_basecalling, merge_individual_fastq_per_barcode, fetch_coronavirus_genomes_from_genexa, split_coronavirus_sequences_to_one_per_file
+
+rule all:
+    input:
+        taxonomy="gtdbtk_output",
+        qual="checkm_output"
+
+# GTDBTK taxonomy
+rule gtdbtk:
+    input:
+        "gtdbtk_bins/GM4c_P99.2.contigs.fa"
+    output:
+        directory("gtdbtk_output")
+    log:
+        out="logs/gtdbtk.out.log",
+        err="logs/gtdbtk.err.log"
+    conda:
+        os.path.join(ENV_DIR, "gtdbtk.yaml")
+    params:
+        config["gtdbtk"]["path"]
+    threads:
+        config["gtdbtk"]["threads"]
+    message:
+        "GTDB taxonomy toolkit"
+    shell:
+        "(date && export GTDBTK_DATA_PATH={params} && gtdbtk classify_wf --cpus {threads} -x fa --genome_dir $(dirname {input}) --out_dir {output} && date) 2> {log.err} > {log.out}"
+
+# Checking bin quality
+rule checkm:
+    input:
+        "gtdbtk_bins/GM4c_P99.2.contigs.fa"
+    output:
+        directory("checkm_output")
+    log:
+        out="logs/checkm.out.log", 
+        err="logs/checkm.err.log"
+    conda:
+        os.path.join(ENV_DIR, "checkm.yaml")
+    threads:
+        config["checkm"]["threads"]
+    message:
+        "Checking bin quality"
+    shell:
+        "(date && checkm lineage_wf -r -t {threads} -x fa $(dirname {input}) {output} && date) 2> {log.err} > {log.out}"
+
+## Plotting bin quality
+#rule checkm_plot:
+#    input:
+#        out=rules.checkm.output,
+#        bins="gtdbtk_bins/GM4c_P99.2.contigs.fa"
+#    output:
+#        directory("checkm_plots")
+#    log:
+#        out="logs/plots.out.log",
+#        err="logs/plots.err.log"
+#    conda:
+#        os.path.join(ENV_DIR, "checkm.yaml")
+#    threads:
+#        config["checkm"]["threads"]
+#    message:
+#        "Plotting CheckM output"
+#    shell:
+#        "(date && checkm bin_qa_plot --image_type png --width 8 --dpi 200 --font_size 8 -x fa -q {input.out} $(dirname {input.bins}) {output} && date)"
