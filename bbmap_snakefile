@@ -1,0 +1,52 @@
+"""
+Author: Susheel Bhanu BUSI
+Affiliation: ESB group LCSB UniLU
+Date: [2019-12-10]
+Run: snakemake -s bbmap_snakefile
+Latest modification:
+"""
+
+import os
+import glob
+# import pandas 
+
+configfile:"bbmap_config.yaml"
+DATA_DIR=config['data_dir']
+RESULTS_DIR=config['results_dir']
+DB_DIR=config['db_dir']
+ENV_DIR=config['env_dir']
+# SAMPLES=[line.strip() for line in open("sample_list", 'r')]	# if using a sample list instead of putting them in a config file
+SAMPLES=config['samples']
+
+
+###########
+rule all: 
+    input: 
+        expand(os.path.join(RESULTS_DIR, "{sample}/RNA.bbmap.rrna.stats"), sample=SAMPLES)
+
+##################
+# rRNA filtering #
+##################
+rule rm_rrna_bbmap_sr_metat:
+    input:
+        r1=os.path.join(DATA_DIR, "{sample}/run1/Preprocessing/mt.r1.trimmed.fq"),
+        r2=os.path.join(DATA_DIR, "{sample}/run1/Preprocessing/mt.r2.trimmed.fq"),
+        refs=[os.path.join(DB_DIR, ref) for ref in config["bbmap"]["rrna_refs"]],
+    output:
+        r1=os.path.join(RESULTS_DIR, "{sample}/R1.norrna.fastq.gz"),
+        r2=os.path.join(RESULTS_DIR, "{sample}/R2.norrna.fastq.gz"),
+        stats=os.path.join(RESULTS_DIR, "{sample}/RNA.bbmap.rrna.stats")
+    log:
+        "logs/{sample}.preproc.bbmap.rrna.metat.sr.log"
+    threads:
+        config["bbmap"]["threads"]
+    conda:
+        os.path.join(ENV_DIR, "bbmap.yaml")
+    message:
+        "Preprocessing metaT short reads: bbmap - rm rRNA reads"
+    shell:
+        "(date && "
+        "refs=$(echo \"{input.refs}\" | tr ' ' ',') && "
+        "bbduk.sh in={input.r1} in2={input.r2} out={output.r1} out2={output.r2} ref=${{refs}} refstats={output.stats} "
+        "qin=33 qout=33 k=27 rcomp=t ziplevel=9 ordered=t threads={threads} && "
+        "date) &> {log}"

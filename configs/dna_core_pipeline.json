@@ -1,0 +1,35 @@
+{
+  "flowcell": "HW7TNDRXX",
+  "MINIMUM_LENGTH": 10,
+  "run_id": "201030_A00980_0046_AHW7TNDRXX",
+  "MEMORY": "100G",
+  "endedness": "paired",
+  "Description": [
+    ""
+  ],
+  "project": "EricssonA_02_SOL",
+  "basenames": [
+    "GM4c_DNA_S1",
+    "GM4b_DNA_S2",
+    "GM4a_DNA_S3",
+    "GM1c_DNA_S4",
+    "GM1b_DNA_S5",
+    "GM1a_DNA_S6",
+    "GM4c_RNA_S7",
+    "GM4b_RNA_S8",
+    "GM4a_RNA_S9",
+    "GM1c_RNA_S10",
+    "GM1b_RNA_S11",
+    "GM1a_RNA_S12"
+  ],
+  "allowed-barcode-mismatches": 1,
+  "sample_type": "UNKNOWN()",
+  "R2_adapters": [
+    "G{100}",
+    "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT"
+  ],
+  "R1_adapters": [
+    "G{100}",
+    "AGATCGGAAGAGCACACGTCTGAACTCCAGTCA"
+  ]
+}

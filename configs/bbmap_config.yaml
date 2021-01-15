@@ -1,0 +1,36 @@
+# Define sample names
+# samples: ["GM1a", "GM1b", "GM1c", "GM4a", "GM4b", "GM4c"]
+samples: ["GM1a", "GM1c", "GM4b", "GM4c"]
+
+# Directory where fastq files are
+data_dir: "/scratch/users/sbusi/aaron_metaG/IMP3"
+
+# Directory to save the output to
+results_dir: "/scratch/users/sbusi/aaron_metaG/IMP3/bbmap_output"
+
+# Directory with the databases
+db_dir: "/work/projects/ecosystem_biology/local_tools/IMP3/databases"
+
+# Direcotory with conda envs
+env_dir: "/scratch/users/sbusi/aaron_metaG/IMP3/envs"
+
+# https://sourceforge.net/projects/bbmap/
+# https://github.com/BioInfoTools/BBMap/
+bbmap:
+    threads: 10
+    rrna_refs: [ # file names in "dbs" folder
+        "sortmerna/rfam-5.8s-database-id98.fasta",
+        "sortmerna/rfam-5s-database-id98.fasta",
+        "sortmerna/silva-arc-16s-id95.fasta",
+        "sortmerna/silva-arc-23s-id98.fasta",
+        "sortmerna/silva-bac-16s-id90.fasta",
+        "sortmerna/silva-bac-23s-id98.fasta",
+        "sortmerna/silva-euk-18s-id95.fasta",
+        "sortmerna/silva-euk-28s-id98.fasta"
+    ]
+    host_refs: # keep empty if no host specific reads should be removed
+        # key: url of GZ archive
+        GCF_000001405.38_GRCh38.p12: "ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/405/GCF_000001405.38_GRCh38.p12/GCF_000001405.38_GRCh38.p12_genomic.fna.gz"
+
+# Number of cpus or threads to use
+threads: 12
