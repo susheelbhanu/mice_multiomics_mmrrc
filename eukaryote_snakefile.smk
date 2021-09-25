@@ -21,7 +21,7 @@ RESULTS_DIR=config["results_dir"]
 # SAMPLES=[line.strip() for line in open("list", 'r')]
 SAMPLES=config["samples"]
 
-localrules: merge_cov, merge_cov_all, euk_abundances, euk_abundances_all
+localrules: file_prep, merge_cov, merge_cov_all, euk_abundances, euk_abundances_all
 
 ###########################
 # default
@@ -47,7 +47,7 @@ rule file_prep:
     log:
         os.path.join(RESULTS_DIR, "logs/eukulele_{sample}_prep.log")
     shell:
-        "(date && ln -vs {input} {output} && date) &> >(tee {log})"
+        "(date && cp -v {input} {output} && date) &> >(tee {log})"
 
 rule eukulele:
     input:    
