@@ -1,11 +1,11 @@
 # Define sample names
-# samples: ["GL_56_Down", "GL_56_Up", "GL_58_Down", "GL_58_Up", "GL_5_Down", "GL_5_Up", "GL_6_Down", "GL_6_UpB", "GL_6_Up"]
+samples: ["GM1a", "GM1b", "GM1c", "GM4a", "GM4b", "GM4c"]
 
 # Directory where fastq files are
-data_dir: "/scratch/users/sbusi/aaron_metaG"
+data_dir: "/work/projects/nomis/backup/aaron_metaG/IMP3"
 
 # Directory to save the output to
-results_dir: "/scratch/users/sbusi/aaron_metaG"
+results_dir: "/work/projects/nomis/backup/aaron_metaG/IMP3"
 
 # Number of cpus or threads to use
-threads: 12
+threads: 18
