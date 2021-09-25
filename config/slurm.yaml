@@ -5,7 +5,7 @@ __default__:
     nodes: 1
     n: 1
     explicit: ""
-    job-name: "CORONASTEP.{rule}"
+    job-name: "mmrrc.{rule}"
 
 gtdbtk:
     time: "00-6:00:00"
@@ -18,9 +18,9 @@ checkm:
     time: "00-12:00:00"
 
 eukulele:
-    time: "04-00:00:00"
+    time: "0-12:00:00"
     partition: "batch"
-    qos: "long"
+    qos: "normal"
     nodes: 1
     n: 1
     explicit: ""
