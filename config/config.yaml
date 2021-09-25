@@ -1,0 +1,11 @@
+# Define sample names
+samples: ["GM1a", "GM1b", "GM1c", "GM4a", "GM4b", "GM4c"]
+
+# Directory where fastq files are
+data_dir: "/work/projects/nomis/backup/aaron_metaG/IMP3"
+
+# Directory to save the output to
+results_dir: "/work/projects/nomis/backup/aaron_metaG/IMP3"
+
+# Number of cpus or threads to use
+threads: 18
