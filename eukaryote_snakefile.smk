@@ -27,6 +27,7 @@ localrules: merge_cov, merge_cov_all, euk_abundances, euk_abundances_all
 # default
 rule eukaryotes: 
     input: 
+        expand(os.path.join(RESULTS_DIR, "eukulele_input/{sample}.faa"), sample=SAMPLES),
         os.path.join(RESULTS_DIR, "eukulele_output")
 #        expand(os.path.join(RESULTS_DIR, "euk_tax_cov/{sample}_eukaryotes.txt"), sample=SAMPLES),
 #        os.path.join(RESULTS_DIR, "euk_tax_cov/merged_eukaryote_abundances.txt"),
