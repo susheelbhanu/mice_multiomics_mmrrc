@@ -1,7 +1,8 @@
 # eukaryotes workflow
 # Runs EUKulele to obtain eukaryotic abundances
 
-import os, pandas
+import os
+import pandas as pd
 
 # CONFIG
 # config file
