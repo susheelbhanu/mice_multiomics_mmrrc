@@ -18,9 +18,9 @@
 # conda env name
 SMK_ENV="snakemake" # USER INPUT REQUIRED
 # number of cores for snakemake
-SMK_CORES=18
+SMK_CORES=6
 # number of jobs for snakemake
-SMK_JOBS=3
+SMK_JOBS=6
 # snakemake file
 SMK_SMK="eukaryote_snakefile.smk"
 # config file
