@@ -21,16 +21,16 @@ RESULTS_DIR=config["results_dir"]
 # SAMPLES=[line.strip() for line in open("list", 'r')]
 SAMPLES=config["samples"]
 
-localrules: merge_cov, euk_abundances
+localrules: merge_cov, merge_cov_all, euk_abundances, euk_abundances_all
 
 ###########################
 # default
 rule eukaryotes: 
     input: 
-        os.path.join(RESULTS_DIR, "eukulele_output"),
-        expand(os.path.join(RESULTS_DIR, "euk_tax_cov/{sample}_eukaryotes.txt"), sample=SAMPLES),
-        os.path.join(RESULTS_DIR, "euk_tax_cov/merged_eukaryote_abundances.txt"),
-        os.path.join(RESULTS_DIR, "euk_tax_cov/merged_eukulele_all_abundances.txt")
+        os.path.join(RESULTS_DIR, "eukulele_output")
+#        expand(os.path.join(RESULTS_DIR, "euk_tax_cov/{sample}_eukaryotes.txt"), sample=SAMPLES),
+#        os.path.join(RESULTS_DIR, "euk_tax_cov/merged_eukaryote_abundances.txt"),
+#        os.path.join(RESULTS_DIR, "euk_tax_cov/merged_eukulele_all_abundances.txt")
     output:
         touch("status/eukaryotes.done")
 
