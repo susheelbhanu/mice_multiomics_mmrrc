@@ -1,0 +1,192 @@
+############################################################
+# STEPS
+
+# Steps to be done
+# steps: ["imp"]  # RUN THIS FIRST and launch IMP3 outside of the workflow
+
+# Next the following steps should be run
+steps: ["eukaryotes"]
+
+############################################################
+# INPUT
+
+# Directory where the workflow exists
+work_dir: "/scratch/users/sbusi/aaron_MG_MT"
+
+# Directory where fastq files are
+fastq_dir: "/work/projects/nomis/backup/NovaSeq_20200624_NOV395_o7028_DataDelivery"
+
+# Directory where the data files are
+data_dir: "/scratch/users/sbusi/aaron_MG_MT/eukulele_output"
+
+# Directory to save the output to
+results_dir: "/scratch/users/sbusi/aaron_MG_MT/results"
+
+# Directory where coverage information is stored
+cov_dir: "/work/projects/nomis/backup/aaron_metaG/IMP3" 
+
+# Directory where the databases are stored
+db_dir: "/mnt/isilon/projects/ecosystem_biology/databases"
+
+# Number of cpus or threads to use
+threads: 8
+
+
+############################################################
+# TOOLS 
+
+##############################
+# imp + eukaryotes workflows
+convert_files:
+  simplify: "/work/projects/ecosystem_biology/COSMIC/2020_COSMIC/cosmic_review/vibrant/VIBRANT/scripts/simplify_faa-ffn.py"
+  type: "Prodigal-FAA"
+  threads: 12
+
+kraken2:
+  db: "/mnt/isilon/projects/ecosystem_biology/databases/kraken2/maxikraken2_1903_140GB/"
+  threads: 8
+
+kaiju:
+  db: "/work/projects/ecosystem_biology/COSMIC/2020_COSMIC/cosmic_review/vibrant/VIBRANT/kaiju/db/viruses"
+  threads: 8
+  rank: "genus"
+
+checkv:
+  db: "/work/projects/nomis/tools/checkv/checkv-db-v1.0"
+  threads: 4
+
+antismash:
+  threads: 16
+
+
+##############################
+# taxonomy workflow
+# Number of cpus or threads to use
+gtdbtk:
+  path: "/mnt/isilon/projects/ecosystem_biology/databases/gtdbtk/release95"
+  threads: 12
+
+checkm:
+  threads: 24
+  plot_threads: 12
+
+
+##############################
+# functions workflow
+metabolic:
+  threads: 12
+  db: "/mnt/isilon/projects/ecosystem_biology/databases/gtdbtk/release95"
+  directory: "/work/projects/nomis/tools/METABOLIC"
+
+# MagicLamp/MagicCave for running metabolic analyses
+# https://github.com/Arkadiy-Garber/MagicLamp
+magiccave:
+  # path now defaults to SUBMODULES. But if it has to be set use the following for IRIS: "/work/projects/nomis/tools/MagicLamp"
+  # for litcrit the below can be used
+  path: "/mnt/md1200/sbusi/metabolisHMM/MagicLamp"    # defaults to SUBMODULES path
+  threads: 24
+
+# Prokka
+prokka:
+  threads: 12
+
+# MANTIS
+mantis:
+  cores: 4
+  hmmer_threads: 1
+  single_mem: 200
+  multi_mem: 500
+  path: "/work/projects/ecosystem_biology/local_tools/mantis"
+  # default HMMs
+  default:
+    kofam_hmm_folder: "/mnt/isilon/projects/ecosystem_biology/data/hmm/kofam_mantis"
+    ncbi_hmm_folder: "/mnt/isilon/projects/ecosystem_biology/data/hmm/NCBI"
+    nog_hmm_folder: "/mnt/isilon/projects/ecosystem_biology/data/hmm/eggnog_mantis/NOGT"
+    pfam_hmm_folder: "/mnt/isilon/projects/ecosystem_biology/data/hmm/pfam"
+    tigrfam_hmm_folder: "/mnt/isilon/projects/ecosystem_biology/data/hmm/tigrfam"
+  # custom HMMs
+  custom: [
+    "/mnt/isilon/projects/ecosystem_biology/data/hmm/Cas/Burstein2016.Nature.Cas_db.hmm",
+    "/mnt/isilon/projects/ecosystem_biology/data/hmm/HMM2015/BRENDA/brenda.hmm",
+    "/mnt/isilon/projects/ecosystem_biology/data/hmm/HMM2015/metacyc/metacyc.hmm",
+    "/mnt/isilon/projects/ecosystem_biology/data/hmm/HMM2015/SwissProt/swissprot.hmm",
+    "/mnt/isilon/projects/ecosystem_biology/data/hmm/transportdb/transportdb_merged.hmm",
+    "/mnt/isilon/projects/ecosystem_biology/data/hmm/resfams/Resfams-full.hmm"
+  ]
+  # weights: <name>_hmm_folder --> <name>_weight
+  weights:
+    ncbi_weight: 0.9
+    nog_weight: 0.8
+    pfam_weight: 0.9
+    tigrfam_weight: 0.5
+
+##############
+# Coassembly/Eukaryote binning workflows
+# Preprocessing
+fastp:
+  threads: 12
+  min_length: 40
+
+# FastQ QC
+# https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
+fastqc:
+  threads: 12
+  params: "-q -f fastq"
+
+# De-duplication
+clumpify:
+  threads: 28
+  dupedist: 12000
+  groups: 50
+  memory: "600g"
+
+# Assembly
+megahit:
+  threads: 28
+
+concoct:
+  threads: 8
+
+##############################
+# misc (a.k.a Miscellaneous) workflow
+MAFFT:
+  threads: 28
+
+IQTREE:
+  threads: 4
+
+##############################
+# Coverage #
+coverm:
+  threads: 24
+  bigmem_threads: 12
+  tmp_dir: "/scratch/users/sbusi/tmp"
+
+bwa:
+  threads: 10
+  map_threads: 24
+
+# http://www.htslib.org/doc/samtools.html
+samtools:
+  sort:
+    chunk_size: "4G"
+    chunk_size_bigmem: "16G"
+
+
+##############################
+# Binning #
+maxbin2:
+  threads: 24
+  min_length: 1500
+  perl: "/scratch/users/sbusi/tools/miniconda3/envs/metabolic/lib/site_perl/5.26.2"
+
+metabat2:
+  threads: 24
+  min_length: 1500
+
+dastool:
+  threads: 24
+  database: "/home/users/sbusi/apps/DAS_Tool-master/db/"
+  path: "/home/users/sbusi/apps/DAS_Tool-master"
+  src: "/home/users/sbusi/apps/DAS_Tool-master/src"
+  score: 0.5
